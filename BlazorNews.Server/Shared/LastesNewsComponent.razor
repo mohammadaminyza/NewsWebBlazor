@@ -1,0 +1,29 @@
+﻿@using BlazorNews.Core.Interfaces
+@inject INewsServices _newsServices
+<div class="latest-posts">
+    <div class="container-fluid">
+        <div class="blog-title-span">
+            <span class="title">آخرین مطالب</span>
+        </div>
+        <NewsBox Newses="_newses" />
+    </div>
+</div>
+
+@code
+{
+    private List<NewsBoxItemDTO> _newses = new List<NewsBoxItemDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetNews();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task GetNews()
+    {
+        await foreach (var item in _newsServices.GetNewsBoxItemDto())
+        {
+            _newses.Add(item);
+        }
+    }
+}

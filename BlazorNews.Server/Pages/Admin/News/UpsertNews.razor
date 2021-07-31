@@ -1,0 +1,90 @@
+﻿@page "/Admin/Newses/Create"
+@page "/Admin/Newses/Edit/{id:int}"
+
+@inject INewsServices _newsServices
+@inject NavigationManager _navigationManager
+
+<div class="single_post">
+    <div class="container-fluid">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="post_content text-center">
+                <h3>افزودن خبر</h3>
+
+                <main>
+                    <EditForm Model="CreateNews" OnValidSubmit="@(async () => await HandleCreateNews())">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-group">
+                            <LabelFor For="@(() => CreateNews.NewsTitle)" />
+                            <InputText @bind-Value="@CreateNews.NewsTitle" class="form-control" placeholder="عنوان خبر را وارد کنید" />
+                            <ValidationMessage style="color:red;" For="@(() => CreateNews.NewsTitle)" />
+                        </div>
+
+                        <div class="form-group">
+                            <LabelFor For="@(() => CreateNews.NewsShortDescription)" />
+                            <InputTextArea @bind-Value="@CreateNews.NewsShortDescription" class="form-control" placeholder="توضیح کوتاه خبر را وارد کنید" />
+                            <ValidationMessage style="color:red;" For="@(() => CreateNews.NewsShortDescription)" />
+                        </div>
+
+                        <div class="form-group">
+                            <LabelFor For="@(() => CreateNews.NewsDescription)" />
+                            <InputTextArea @bind-Value="@CreateNews.NewsDescription" class="form-control" placeholder="خبر را وارد کنید" />
+                            <ValidationMessage style="color:red;" For="@(() => CreateNews.NewsDescription)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>تصویر خبر</label>
+                            <ValidationMessage style="color:red;" For="@(() => CreateNews.ImageName)" />
+                        </div>
+
+                        <div class="form-group col-12">
+                            <input type="submit" class="btn btn-success col-12" style="width:100% !important;" value="ثبت خبر" />
+                        </div>
+                    </EditForm>
+                </main>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear-fix"></div>
+
+@code {
+
+    [Parameter]
+    public NewsBoxItemDTO CreateNews { get; set; } = new NewsBoxItemDTO();
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != null)
+        {
+            Title = "ویرایش";
+        }
+
+        else
+        {
+            Title = "افزودن";
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task HandleCreateNews()
+    {
+        if (await _newsServices.ExistNews(p => p.NewsTitle == CreateNews.NewsTitle))
+        {
+            return;
+        }
+
+        CreateNews.ImageName = "DefaultImage.jpg";
+        await _newsServices.AddNews(CreateNews);
+
+        _navigationManager.NavigateTo("Admin/Newses/List-News");
+    }
+}

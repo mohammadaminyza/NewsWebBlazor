@@ -1,0 +1,44 @@
+﻿@page "/"
+@using BlazorNews.Server.Pages
+@using BlazorNews.Server
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>اخبار</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="/site/css/bootstrap.css">
+    <link rel="stylesheet" href="/site/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/site/css/owl.carousel.css">
+    <link rel="stylesheet" href="/site/css/owl.theme.default.css">
+    <link rel="stylesheet" href="/site/css/style.css">
+    <link href="BlazorNews.Server.styles.css" rel="stylesheet" />
+</head>
+<body>
+    <component type="typeof(App)" render-mode="ServerPrerendered" />
+
+    <div id="blazor-error-ui" style="display: none">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="/site/js/jquery.js"></script>
+    <script src="/site/js/bootstrap.js"></script>
+    <script src="/site/js/owl.carousel.min.js"></script>
+    <script src="/site/js/index.js"></script>
+    <script src="~/site/js/sweetalert.min.js"></script>
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>

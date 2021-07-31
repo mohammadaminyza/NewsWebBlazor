@@ -1,0 +1,78 @@
+﻿@page "/Admin/Newses"
+@using Microsoft.AspNetCore.Mvc.Routing
+@using BlazorNews.Entities.Domain
+@using BlazorNews.Core.Convertors
+@inject INewsServices _newsService
+@inject IJSRuntime _jsRuntime
+
+<div class="container">
+    <p><a href="Admin/Newses/Create-News" class="btn btn-success">ساخت خبر</a></p>
+
+    @if (NewsList.Any())
+    {
+        <table class="table table-dark table-bordered table-hover">
+            <thead>
+                <tr>
+                    <td>آی دی</td>
+                    <td>عنوان خبر</td>
+                    <td>توضیح کوتاه</td>
+                    <td>تاریخ انتشار</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in NewsList)
+                {
+                    <tr>
+                        <td>@item.NewsId</td>
+                        <td>@item.NewsTitle</td>
+                        <td>@item.NewsShortDescription</td>
+                        <td>@item.CreateDate.DateToShamsi()</td>
+                        <td>
+                            <a href="#" class="btn btn-warning">ویرایش</a>
+                            <button class="btn btn-danger" @onclick="@(async () => await DeleteNews(item.NewsId))">حذف</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+    else
+    {
+        <div class="alert alert-info">خبری تا کنون ثبت نگشته</div>
+    }
+</div>
+
+@code {
+    private List<NewsBoxItemDTO> NewsList = new List<NewsBoxItemDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetNewses();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task GetNewses()
+    {
+        NewsList = new List<NewsBoxItemDTO>();
+        await foreach (var item in _newsService.GetNewsBoxItemDto())
+        {
+            NewsList.Add(item);
+        }
+    }
+
+    private async Task DeleteNews(Guid id)
+    {
+        var confirmDelete = await _jsRuntime.InvokeAsync<bool>("SweetAlertConfirm", "از حذف این خبر مطمئنید؟", "شما درخواست حذف این خبر را داده اید در صورت اطمینان کلیک کنید", "خبر با موفقیت حذف شد", "عملیات لغو شد");
+
+        if (confirmDelete)
+        {
+            await _newsService.DeleteNews(id);
+            await GetNewses();
+        }
+
+
+    }
+
+}

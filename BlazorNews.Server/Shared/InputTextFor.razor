@@ -1,0 +1,27 @@
+﻿@using System.Linq.Expressions
+<InputText id="@GetId()" class="form-control" @bind-Value="Value" @attributes="InputAttributes" />
+
+@code {
+
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public Expression<Func<string>> For { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> InputAttributes { get; set; }
+
+    private MemberExpression GetExpression()
+    {
+        var expression = (MemberExpression)For.Body;
+        return expression;
+    }
+
+    private string GetId()
+    {
+        var expression = GetExpression();
+
+        return expression.Member.Name;
+    }
+}

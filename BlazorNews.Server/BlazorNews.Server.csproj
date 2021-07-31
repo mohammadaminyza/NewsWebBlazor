@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Remove="Pages\Admin\Create-News.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Pages\Admin\News\Create-News.razor~RF3b7233.TMP" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\BlazorNews.Core\BlazorNews.Core.csproj" />
+		<ProjectReference Include="..\BlazorNews.Domain\BlazorNews.Domain.csproj" />
+		<ProjectReference Include="..\BlazorNews.Infra.Data\BlazorNews.Infra.Data.csproj" />
+		<ProjectReference Include="..\Infra.IoC\BlazorNews.Infra.IoC.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="10.1.1" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.5.21301.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.5.21301.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.5.21301.9">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\NewsImage\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Pages\Admin\News\UpsertNews.razor" />
+	</ItemGroup>
+
+</Project>

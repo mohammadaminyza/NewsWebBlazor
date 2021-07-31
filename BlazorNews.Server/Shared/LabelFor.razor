@@ -1,0 +1,36 @@
+﻿@using System.Reflection
+@using System.ComponentModel
+@using System.ComponentModel.DataAnnotations
+@using System.Linq.Expressions;
+
+<label for="@GetId()" @attributes="AdditionalAttributes">@label</label>
+
+@code {
+    [Parameter]
+    public Expression<Func<string>> For { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object> AdditionalAttributes { get; set; }
+
+    private string label => GetDisplayName();
+
+    private MemberExpression GetExpression()
+    {
+        var expression = (MemberExpression)For.Body;
+        return expression;
+    }
+
+    private string GetDisplayName()
+    {
+        var expression = GetExpression();
+        var value = expression.Member.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+        return value?.Name ?? expression.Member.Name ?? "";
+    }
+
+    private string GetId()
+    {
+        var expression = GetExpression();
+
+        return expression.Member.Name;
+    }
+}

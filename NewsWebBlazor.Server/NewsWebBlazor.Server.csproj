@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="Data\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\BlazorNews.Core\BlazorNews.Core.csproj" />
+		<ProjectReference Include="..\BlazorNews.Domain\BlazorNews.Domain.csproj" />
+		<ProjectReference Include="..\BlazorNews.Infra.Data\BlazorNews.Infra.Data.csproj" />
+		<ProjectReference Include="..\Infra.IoC\BlazorNews.Infra.IoC.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.5.21301.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.5.21301.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.5.21301.9" />
+	</ItemGroup>
+
+</Project>
