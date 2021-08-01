@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using BlazorNews.Core.Interfaces;
@@ -16,6 +17,7 @@ namespace BlazorNews.Infra.IoC
         public static void AddRegisterDependencies(this IServiceCollection service)
         {
             //Injections
+            service.AddScoped<HttpClient>();
             service.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             service.AddScoped<INewsRepository, NewsRepository>();
             service.AddScoped<IUserRepository, UserRepository>();

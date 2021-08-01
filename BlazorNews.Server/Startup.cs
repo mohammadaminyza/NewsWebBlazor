@@ -24,7 +24,11 @@ namespace BlazorNews.Server
 
         #endregion
 
+        #region Configuration
+
         public IConfiguration Configuration { get; }
+
+        #endregion
 
         #region Services
 
@@ -33,6 +37,7 @@ namespace BlazorNews.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddControllers();
             services.AddServerSideBlazor();
 
             // Auto Mapper Configurations
@@ -119,6 +124,7 @@ namespace BlazorNews.Server
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapDefaultControllerRoute();
             });
         }
         #endregion

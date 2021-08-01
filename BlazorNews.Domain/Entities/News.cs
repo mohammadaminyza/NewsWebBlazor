@@ -30,7 +30,6 @@ namespace BlazorNews.Domain.Entities
 
         public bool IsActive { get; set; }
 
-        [Required]
         public string ImageName { get; set; }
 
         public DateTime CreateDate { get; set; } = DateTime.Now;
