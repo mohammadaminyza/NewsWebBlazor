@@ -52,7 +52,7 @@
 @code {
 
     [Parameter]
-    public NewsBoxItemDTO CreateNews { get; set; } = new NewsBoxItemDTO();
+    public News CreateNews { get; set; } = new();
 
     [Parameter]
     public string Title { get; set; }
@@ -83,8 +83,9 @@
         }
 
         CreateNews.ImageName = "DefaultImage.jpg";
+        CreateNews.UserId = 1;
         await _newsServices.AddNews(CreateNews);
 
-        _navigationManager.NavigateTo("Admin/Newses/List-News");
+        _navigationManager.NavigateTo("Admin/Newses/");
     }
 }

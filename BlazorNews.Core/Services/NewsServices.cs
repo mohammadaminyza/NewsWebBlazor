@@ -11,7 +11,7 @@ using BlazorNews.Core.Generators;
 using BlazorNews.Core.Interfaces;
 using BlazorNews.Core.Security;
 using BlazorNews.Domain.IRepository;
-using BlazorNews.Entities.Domain;
+using BlazorNews.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace BlazorNews.Core.Services

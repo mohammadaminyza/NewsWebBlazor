@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using BlazorNews.Core.DTOs;
-using BlazorNews.Entities.Domain;
+﻿using BlazorNews.Core.DTOs;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using BlazorNews.Domain.Entities;
 
 namespace BlazorNews.Core.Interfaces
 {

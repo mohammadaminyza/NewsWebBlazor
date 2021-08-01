@@ -34,8 +34,4 @@
 	  <Folder Include="wwwroot\NewsImage\" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Include="Pages\Admin\News\UpsertNews.razor" />
-	</ItemGroup>
-
 </Project>

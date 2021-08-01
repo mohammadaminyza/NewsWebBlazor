@@ -1,12 +1,11 @@
 ﻿@page "/Admin/Newses"
 @using Microsoft.AspNetCore.Mvc.Routing
-@using BlazorNews.Entities.Domain
 @using BlazorNews.Core.Convertors
 @inject INewsServices _newsService
 @inject IJSRuntime _jsRuntime
 
 <div class="container">
-    <p><a href="Admin/Newses/Create-News" class="btn btn-success">ساخت خبر</a></p>
+    <p><a href="Admin/Newses/Create" class="btn btn-success">ساخت خبر</a></p>
 
     @if (NewsList.Any())
     {
@@ -29,7 +28,7 @@
                         <td>@item.NewsShortDescription</td>
                         <td>@item.CreateDate.DateToShamsi()</td>
                         <td>
-                            <a href="#" class="btn btn-warning">ویرایش</a>
+                            <a href="/Admin/Newses/Edit/@item.NewsId" class="btn btn-warning">ویرایش</a>
                             <button class="btn btn-danger" @onclick="@(async () => await DeleteNews(item.NewsId))">حذف</button>
                         </td>
                     </tr>

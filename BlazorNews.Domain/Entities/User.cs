@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BlazorNews.Entities.Domain;
+using BlazorNews.Domain.Entities;
 
 namespace BlazorNews.Domain.Entities
 {
     public class User
     {
-        [Key]
-        public Guid UserId { get; set; } = Guid.NewGuid();
+        [Key] 
+        public int UserId { get; set; }
 
         [Required]
         public string UserName { get; set; }

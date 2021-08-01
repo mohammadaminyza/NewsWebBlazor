@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorNews.Infra.Data.Migrations
 {
     [DbContext(typeof(BlazorNewsContext))]
-    [Migration("20210629121858_Mig-Update-Newses-Table")]
-    partial class MigUpdateNewsesTable
+    [Migration("20210801145024_Mig-AddUserId")]
+    partial class MigAddUserId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,29 @@ namespace BlazorNews.Infra.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "6.0.0-preview.5.21301.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("BlazorNews.Domain.Entities.User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("User");
+                });
 
             modelBuilder.Entity("BlazorNews.Entities.Domain.News", b =>
                 {
@@ -51,9 +74,30 @@ namespace BlazorNews.Infra.Data.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("NewsId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Newses");
+                });
+
+            modelBuilder.Entity("BlazorNews.Entities.Domain.News", b =>
+                {
+                    b.HasOne("BlazorNews.Domain.Entities.User", "User")
+                        .WithMany("Newses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BlazorNews.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Newses");
                 });
 #pragma warning restore 612, 618
         }

@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using BlazorNews.Domain.Entities;
 
-namespace BlazorNews.Entities.Domain
+namespace BlazorNews.Domain.Entities
 {
     public class News
     {
         [Key]
         public Guid NewsId { get; set; } = Guid.NewGuid();
 
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         [MaxLength(150)]

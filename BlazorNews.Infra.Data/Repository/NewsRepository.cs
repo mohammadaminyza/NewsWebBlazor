@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using BlazorNews.Domain.IRepository;
-using BlazorNews.Entities.Domain;
+﻿using BlazorNews.Domain.IRepository;
 using BlazorNews.Infra.Data.Context;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using BlazorNews.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace BlazorNews.Infra.Data.Repository
 {

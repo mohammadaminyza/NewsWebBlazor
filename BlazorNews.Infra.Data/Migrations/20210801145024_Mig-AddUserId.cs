@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BlazorNews.Infra.Data.Migrations
 {
-    public partial class MigAddTables : Migration
+    public partial class MigAddUserId : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,8 @@ namespace BlazorNews.Infra.Data.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -26,7 +27,7 @@ namespace BlazorNews.Infra.Data.Migrations
                 columns: table => new
                 {
                     NewsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     NewsTitle = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     NewsShortDescription = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     NewsDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),

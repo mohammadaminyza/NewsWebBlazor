@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BlazorNews.Core.DTOs;
 using BlazorNews.Domain.Entities;
-using BlazorNews.Entities.Domain;
 
 namespace BlazorNews.Core.Mapper
 {

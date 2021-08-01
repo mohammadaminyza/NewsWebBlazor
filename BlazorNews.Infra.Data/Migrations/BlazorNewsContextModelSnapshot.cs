@@ -21,9 +21,10 @@ namespace BlazorNews.Infra.Data.Migrations
 
             modelBuilder.Entity("BlazorNews.Domain.Entities.User", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -71,8 +72,8 @@ namespace BlazorNews.Infra.Data.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("NewsId");
 
