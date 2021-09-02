@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BlazorNews.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlazorNews.Domain.IRepository
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<IdentityUser>
     {
     }
 }

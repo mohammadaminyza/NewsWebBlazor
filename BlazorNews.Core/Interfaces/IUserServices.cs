@@ -6,13 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using BlazorNews.Core.DTOs;
 using BlazorNews.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlazorNews.Core.Interfaces
 {
     public interface IUserServices
     {
-        Task AddUser(User user);
+        Task<IdentityUser> GetUserByUserName(string userName);
+        Task<IdentityUser> GetUserByEmail(string email);
+        Task AddUser(IdentityUser user);
         Task RegisterUser(LoginAndRegisterDTO registerDto);
-        Task<bool> ExistUser(Expression<Func<User, bool>> condition);
+        Task<bool> ExistUser(Expression<Func<IdentityUser, bool>> condition);
     }
 }

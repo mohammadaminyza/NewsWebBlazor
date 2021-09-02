@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BlazorNews.Domain.Entities;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace BlazorNews.Core.Interfaces
 {
@@ -13,14 +14,17 @@ namespace BlazorNews.Core.Interfaces
         IAsyncEnumerable<News> GetNewses();
         IAsyncEnumerable<News> GetNewses(Expression<Func<News, bool>> whereCondition);
         IAsyncEnumerable<NewsBoxItemDTO> GetNewsBoxItemDto();
-        Task<News> GetNewsById(object newsId);
+        Task<News> GetNewsById(int newsId);
         Task<News> GetNewsById(Expression<Func<News, bool>> condition);
         Task<News> AddNews(News news);
         Task<News> AddNews(NewsBoxItemDTO news);
-        Task SaveNewsImage(IFormFile image);
+        Task<string> SaveNewsImage(IBrowserFile image);
         Task UpdateNews(News news);
-        Task DeleteNews(object newsId);
+        Task DeleteNews(int newsId);
         Task DeleteNews(News news);
         Task<bool> ExistNews(Expression<Func<News, bool>> condition);
+
+        IAsyncEnumerable<Comment> GetNewsComments(int newsId);
+        Task AddNewsComment(Comment comment);
     }
 }

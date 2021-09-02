@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -12,20 +13,24 @@ using BlazorNews.Core.Interfaces;
 using BlazorNews.Core.Security;
 using BlazorNews.Domain.IRepository;
 using BlazorNews.Domain.Entities;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 
 namespace BlazorNews.Core.Services
 {
     public class NewsServices : INewsServices
     {
-        private INewsRepository _newsRepository;
+        private readonly INewsRepository _newsRepository;
+        private readonly IRepository<Comment> _commentRepository;
         private IMapper _mapper;
 
-        public NewsServices(INewsRepository newsRepository, IMapper mapper)
+        public NewsServices(INewsRepository newsRepository, IRepository<Comment> commentRepository, IMapper mapper)
         {
             _newsRepository = newsRepository;
+            _commentRepository = commentRepository;
             _mapper = mapper;
         }
+
         public IAsyncEnumerable<News> GetNewses()
         {
             return _newsRepository.GetAll();
@@ -50,7 +55,7 @@ namespace BlazorNews.Core.Services
             });
         }
 
-        public async Task<News> GetNewsById(object newsId)
+        public async Task<News> GetNewsById(int newsId)
         {
             return await _newsRepository.GetById(newsId);
         }
@@ -71,21 +76,21 @@ namespace BlazorNews.Core.Services
             return await AddNews(mapNews);
         }
 
-        public async Task SaveNewsImage(IFormFile image)
+        public async Task<string> SaveNewsImage(IBrowserFile image)
         {
-            if (!image.IsImage())
-            {
-                throw new Exception("File Format Error");
-            }
-
-            string fileFormat = Path.GetExtension(image.FileName);
+            string fileFormat = Path.GetExtension(image.Name);
             string imageNewName = GuidGenerate.GuidGenerator() + fileFormat;
 
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + imageNewName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/NewsImage/" + imageNewName);
 
-            await using var stream = new FileStream(filePath, FileMode.Create);
+            var memoryStream = new MemoryStream();
+            await image.OpenReadStream().CopyToAsync(memoryStream);
 
-            await image.CopyToAsync(stream);
+            await using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+
+            memoryStream.WriteTo(stream);
+
+            return imageNewName;
         }
 
         public async Task UpdateNews(News news)
@@ -93,7 +98,7 @@ namespace BlazorNews.Core.Services
             await _newsRepository.Update(news);
         }
 
-        public async Task DeleteNews(object newsId)
+        public async Task DeleteNews(int newsId)
         {
             await DeleteNews(await GetNewsById(newsId));
         }
@@ -106,6 +111,16 @@ namespace BlazorNews.Core.Services
         public async Task<bool> ExistNews(Expression<Func<News, bool>> condition)
         {
             return await _newsRepository.Any(condition);
+        }
+
+        public IAsyncEnumerable<Comment> GetNewsComments(int newsId)
+        {
+            return _commentRepository.GetAll(p => p.NewsId == newsId);
+        }
+
+        public async Task AddNewsComment(Comment comment)
+        {
+            await _commentRepository.Add(comment);
         }
     }
 }

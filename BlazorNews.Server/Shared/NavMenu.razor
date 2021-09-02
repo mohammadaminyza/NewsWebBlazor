@@ -1,5 +1,26 @@
-﻿<ul>
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@inject AuthenticationStateProvider _authenticationStateProvider
+
+<ul>
     <li><NavLink href="Admin/Newses/">لیست اخبار</NavLink></li>
-    <li><NavLink href="Register">ثبت نام</NavLink></li>
-    <li><NavLink href="login">ورود</NavLink></li>
+    @if (!User().Identity.IsAuthenticated)
+    {
+        <li><NavLink href="Register">ثبت نام</NavLink></li>
+        <li><NavLink href="login">ورود</NavLink></li>
+    }
+    else
+    {
+        <li><span>@User().Identity.Name خوش آمدید</span></li>
+    }
 </ul>
+
+@code
+{
+    private ClaimsPrincipal User()
+    {
+        var authState = _authenticationStateProvider.GetAuthenticationStateAsync().Result;
+
+        return authState.User;
+    }
+}

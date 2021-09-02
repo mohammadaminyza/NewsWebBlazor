@@ -35,7 +35,7 @@ namespace BlazorNews.Infra.Data.Repository
             return _repository.GetAll(whereCondition, selectCondition);
         }
 
-        public async Task<News> GetNewsByNewsId(object id)
+        public async Task<News> GetNewsByNewsId(int id)
         {
             return await _repository.GetById(id);
         }

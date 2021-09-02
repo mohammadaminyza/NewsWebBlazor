@@ -1,15 +1,15 @@
-using System;
 using AutoMapper;
 using BlazorNews.Core.Mapper;
 using BlazorNews.Infra.Data.Context;
 using BlazorNews.Infra.IoC;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlazorNews.Server
 {
@@ -65,31 +65,14 @@ namespace BlazorNews.Server
 
             #endregion
 
+            #region Identity
 
-            #region Authication
-
-            //Authentication Config
-
-
-
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-
-                })
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/Login";
-                    options.LogoutPath = "/SignOut";
-                    options.ExpireTimeSpan = TimeSpan.FromDays(30);
-                    options.Cookie.Name = "LoginCookie";
-                });
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<BlazorNewsContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
 
             #endregion
-
-
         }
 
         #endregion
@@ -117,11 +100,11 @@ namespace BlazorNews.Server
             app.UseRouting();
 
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
                 endpoints.MapDefaultControllerRoute();

@@ -1,5 +1,6 @@
 ﻿@page "/Admin/Newses/Create"
 @page "/Admin/Newses/Edit/{id:int}"
+@using System.IO
 
 @inject INewsServices _newsServices
 @inject NavigationManager _navigationManager
@@ -35,6 +36,11 @@
 
                         <div class="form-group">
                             <label>تصویر خبر</label>
+                            <InputFile OnChange="ImageChangedHandler" />
+                            @if (!string.IsNullOrEmpty(CreateNews.ImageName))
+                            {
+                                <img src="/NewsImage/@CreateNews.ImageName" />
+                            }
                             <ValidationMessage style="color:red;" For="@(() => CreateNews.ImageName)" />
                         </div>
 
@@ -65,6 +71,7 @@
         if (Id != null)
         {
             Title = "ویرایش";
+            CreateNews = await _newsServices.GetNewsById(Id.Value);
         }
 
         else
@@ -75,15 +82,18 @@
         await base.OnInitializedAsync();
     }
 
+    private async Task ImageChangedHandler(InputFileChangeEventArgs e)
+    {
+        CreateNews.ImageName = await _newsServices.SaveNewsImage(e.File);
+    }
+
     private async Task HandleCreateNews()
     {
         if (await _newsServices.ExistNews(p => p.NewsTitle == CreateNews.NewsTitle))
         {
             return;
         }
-
-        CreateNews.ImageName = "DefaultImage.jpg";
-        CreateNews.UserId = 1;
+        CreateNews.UserId = Guid.NewGuid().ToString();
         await _newsServices.AddNews(CreateNews);
 
         _navigationManager.NavigateTo("Admin/Newses/");

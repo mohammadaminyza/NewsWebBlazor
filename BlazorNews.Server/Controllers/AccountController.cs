@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BlazorNews.Core.Interfaces;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Shared.Security;
 
 namespace BlazorNews.Server.Controllers
 {
@@ -14,31 +18,44 @@ namespace BlazorNews.Server.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
+        private UserManager<IdentityUser> _userManager;
+        private IUserServices _userServices;
+        private AuthenticationStateProvider _authenticationStateProvider;
 
-        public AccountController(IAuthorizationService authorizationService)
+        public AccountController(IAuthorizationService authorizationService, UserManager<IdentityUser> userManager, IUserServices userServices, AuthenticationStateProvider authenticationStateProvider)
         {
             _authorizationService = authorizationService;
+            _userManager = userManager;
+            _userServices = userServices;
+            _authenticationStateProvider = authenticationStateProvider;
         }
+        
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginAndRegisterDTO login)
         {
+            var fullUser = await _userServices.GetUserByUserName(login.UserName);
+            
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, login.UserName),
+                new Claim(ClaimTypes.Name, fullUser.UserName),
+                new Claim(ClaimTypes.Email, fullUser.Email),
+                new Claim("UserId", fullUser.Id),
             };
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            var identity = new ClaimsIdentity(claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var principal = new ClaimsPrincipal(identity);
 
             var properties = new AuthenticationProperties
             {
                 IsPersistent = true
             };
 
-            await _authorizationService.AuthorizeAsync(principal, properties, AuthorizationPolicy.Combine());
 
+            await HttpContext.SignInAsync(principal, properties);
 
             return Ok();
         }

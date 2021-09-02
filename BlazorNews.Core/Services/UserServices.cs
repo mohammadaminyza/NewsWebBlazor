@@ -9,6 +9,7 @@ using BlazorNews.Core.DTOs;
 using BlazorNews.Core.Interfaces;
 using BlazorNews.Domain.Entities;
 using BlazorNews.Domain.IRepository;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlazorNews.Core.Services
 {
@@ -22,21 +23,31 @@ namespace BlazorNews.Core.Services
         }
 
 
-        public async Task AddUser(User user)
+        public async Task<IdentityUser> GetUserByUserName(string userName)
+        {
+            return await _userRepository.GetById(o => o.UserName == userName);
+        }
+
+        public async Task<IdentityUser> GetUserByEmail(string email)
+        {
+            return await _userRepository.GetById(o => o.Email == email);
+        }
+
+        public async Task AddUser(IdentityUser user)
         {
             await _userRepository.Add(user);
         }
 
         public async Task RegisterUser(LoginAndRegisterDTO registerDto)
         {
-            await AddUser(new User()
+            await AddUser(new IdentityUser()
             {
                 UserName = registerDto.UserName,
-                Password = registerDto.Password
+                PasswordHash = registerDto.GetHashCode().ToString()
             });
         }
 
-        public async Task<bool> ExistUser(Expression<Func<User, bool>> condition)
+        public async Task<bool> ExistUser(Expression<Func<IdentityUser, bool>> condition)
         {
             return await _userRepository.Any(condition);
         }

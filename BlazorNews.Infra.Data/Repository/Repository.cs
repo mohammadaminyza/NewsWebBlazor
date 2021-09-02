@@ -25,7 +25,7 @@ namespace BlazorNews.Infra.Data.Repository
 
         public IAsyncEnumerable<TSource> GetAll(Expression<Func<TSource, bool>> whereCondition)
         {
-            var result = GetTable().Result.AsQueryable();
+            var result = GetTable();
 
             if (whereCondition != null)
             {
@@ -38,7 +38,7 @@ namespace BlazorNews.Infra.Data.Repository
         public IAsyncEnumerable<TSelect> GetAll<TSelect>(Expression<Func<TSource, bool>> whereCondition,
             Expression<Func<TSource, TSelect>> selectCondition)
         {
-            var result = GetTable().Result.AsQueryable();
+            var result = GetTable();
 
             if (selectCondition == null)
             {
@@ -55,16 +55,16 @@ namespace BlazorNews.Infra.Data.Repository
             return selection.AsAsyncEnumerable();
         }
 
-        public async Task<TSource> GetById(object id)
+        public async Task<TSource> GetById(int id)
         {
-            var table = await GetTable();
+            var result = await _context.Set<TSource>().FindAsync(id);
 
-            return await table.FindAsync(id);
+            return result;
         }
 
         public async Task<TSource> GetById(Expression<Func<TSource, bool>> propertyCondition)
         {
-            var table = await GetTable();
+            var table = GetTable();
 
             return await table.FirstOrDefaultAsync(propertyCondition);
         }
@@ -91,21 +91,21 @@ namespace BlazorNews.Infra.Data.Repository
 
         public async Task<bool> Any(Expression<Func<TSource, bool>> condition)
         {
-            var table = await GetTable();
+            var table = GetTable();
 
             return await table.AnyAsync(condition);
         }
 
         public async Task<int> Count(Expression<Func<TSource, bool>> condition)
         {
-            var table = await GetTable();
+            var table = GetTable();
 
             return await table.CountAsync(condition);
         }
 
-        private Task<DbSet<TSource>> GetTable()
+        private IQueryable<TSource> GetTable()
         {
-            return Task.FromResult<DbSet<TSource>>(_context.Set<TSource>());
+            return _context.Set<TSource>().AsQueryable();
         }
     }
 }

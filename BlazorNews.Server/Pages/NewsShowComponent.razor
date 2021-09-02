@@ -1,0 +1,101 @@
+﻿@page "/ShowNews/{NewsId:int}"
+@inject INewsServices _newsServices
+
+<div class="single_post">
+    <div class="container-fluid">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="post_img">
+                        <img src="/NewsImage/@News.ImageName" alt="">
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="posts_meta text-center">
+                <span><i class="fa fa-comment-o"></i> 25 نظر</span>
+                <span><i class="fa fa-archive"></i> اقتصادی</span>
+                <span><i class="fa fa-calendar"></i> 99.10.1</span>
+            </div>
+            <div class="post_content">
+                <h4>| @News.NewsTitle</h4>
+                @((MarkupString)News.NewsDescription)
+            </div>
+            <div class="comments_form">
+                <h5>دیدگاه شما </h5>
+                <form>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" @bind-value="Comment.Name" placeholder="نام شما">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="email" class="form-control" @bind-value="Comment.Email" placeholder="ایمیل">
+                        </div>
+                        <div class="col-md-12">
+                            <textarea class="form-control" @bind="Comment.CommentText" placeholder="نظر شما ..."></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="text-left">
+                                <button class="btn btn-primary" @onclick="SendComment">ثبت نظر</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        @foreach (var comment in Comments)
+                        {
+                            <span>@comment.Name</span>
+                            <p>@comment.CommentText</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear-fix"></div>
+
+@code {
+    [Parameter]
+    public int NewsId { get; set; }
+
+    public News News { get; set; } = new News();
+
+    public Comment Comment { get; set; } = new Comment();
+
+    public List<Comment> Comments { get; set; } = new List<Comment>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        News = await _newsServices.GetNewsById(NewsId);
+
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await GetComments();
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task GetComments()
+    {
+        Comments = new List<Comment>();
+
+        await foreach (var item in _newsServices.GetNewsComments(NewsId))
+        {
+            Comments.Add(item);
+        }
+    }
+
+    private async Task SendComment()
+    {
+        Comment.NewsId = NewsId;
+        await _newsServices.AddNewsComment(Comment);
+    }
+
+}

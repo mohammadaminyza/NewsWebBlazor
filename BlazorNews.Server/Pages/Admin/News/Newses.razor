@@ -44,7 +44,7 @@
 </div>
 
 @code {
-    private List<NewsBoxItemDTO> NewsList = new List<NewsBoxItemDTO>();
+    private List<NewsBoxItemDTO> NewsList;
 
     protected override async Task OnInitializedAsync()
     {
@@ -61,7 +61,7 @@
         }
     }
 
-    private async Task DeleteNews(Guid id)
+    private async Task DeleteNews(int id)
     {
         var confirmDelete = await _jsRuntime.InvokeAsync<bool>("SweetAlertConfirm", "از حذف این خبر مطمئنید؟", "شما درخواست حذف این خبر را داده اید در صورت اطمینان کلیک کنید", "خبر با موفقیت حذف شد", "عملیات لغو شد");
 

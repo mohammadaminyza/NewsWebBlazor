@@ -9,7 +9,7 @@ namespace BlazorNews.Core.DTOs
 {
     public class NewsBoxItemDTO
     {
-        public Guid NewsId { get; set; } = Guid.NewGuid();
+        public int NewsId { get; set; }
 
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         [MaxLength(150, ErrorMessage = "{0} نمیتواند از {1} بیشتر باشد")]

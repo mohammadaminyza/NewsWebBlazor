@@ -13,7 +13,7 @@ namespace BlazorNews.Domain.IRepository
         IAsyncEnumerable<TSource> GetAll(Expression<Func<TSource, bool>> whereCondition);
         IAsyncEnumerable<TSelect> GetAll<TSelect>(Expression<Func<TSource, bool>> whereCondition,
             Expression<Func<TSource, TSelect>> selectCondition);
-        Task<TSource> GetById(object id);
+        Task<TSource> GetById(int id);
         Task<TSource> GetById(Expression<Func<TSource, bool>> propertyCondition);
         Task<TSource> Add(TSource entity);
         Task Update(TSource entity);
